@@ -83,16 +83,11 @@ def classify_query(query: str) -> bool:
     First checks keywords (fast), then asks LLM (accurate).
     """
     q_lower = query.lower()
-
-    # Fast check — non-academic signals
     if any(word in q_lower for word in NON_ACADEMIC_KEYWORDS):
         return False
-
-    # Fast check — academic signals
     if any(word in q_lower for word in ACADEMIC_KEYWORDS):
         return True
 
-    # Ambiguous — ask LLM
     try:
         llm = get_llm()
         prompt = f"""Is this question related to academic study, learning, or education?
@@ -111,7 +106,7 @@ Question: {query}"""
         return "ACADEMIC" in result
 
     except Exception:
-        return True  # if classifier fails, allow the query
+        return True
 
 
 def extract_topic(query: str) -> dict:
